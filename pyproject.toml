@@ -1,0 +1,19 @@
+[project]
+name = "sidewalk-depth-research"
+version = "0.1.0"
+description = "Ambiente experimental para estimativa monocular de profundidade em calçadas."
+requires-python = ">=3.11,<3.14"
+
+# As dependências ficam em requirements.txt (versões fixadas para reprodutibilidade).
+# Este arquivo existe apenas para configurar ferramentas.
+
+[tool.pytest.ini_options]
+# Permite `import src...` nos testes sem instalar o projeto.
+pythonpath = ["."]
+testpaths = ["tests"]
+# O Open3D instala o Dash como dependência, que registra um plugin de pytest
+# desnecessário (e com avisos de depreciação). Desativado aqui.
+addopts = "-p no:dash"
+markers = [
+    "slow: testes que baixam pesos ou executam inferência real (deselecionar com -m 'not slow')",
+]

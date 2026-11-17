@@ -1,0 +1,2 @@
+image_name,category,location_id,real_depth_cm,real_height_difference_cm,real_width_cm,real_length_cm,camera_height_cm,camera_distance_cm,camera_angle,lighting_condition,pavement_type,notes
+broken_sidewalk_la_01.jpg,uneven_surfaces,wikimedia_la_01,,,,,,,daylight,concrete,"Foto pública (CC BY-SA 4.0 Downtowngal / Wikimedia Commons). Sem medição física de referência."

@@ -1,0 +1,38 @@
+# =============================================================================
+# Sidewalk Depth Research — dependências
+# Python 3.11 (versão testada). Open3D 0.20 publica wheels até 3.13, mas
+# outras versões de Python não foram validadas neste projeto.
+#
+# Versões fixadas = conjunto efetivamente instalado e testado em 2026-11-16
+# (macOS arm64 / Apple M1, CPU + MPS). Ver README.md > "Decisões de dependências".
+#
+# GPU NVIDIA (opcional): instale ANTES o torch/torchvision com CUDA a partir do
+# índice oficial do PyTorch (ver README.md) e depois rode este arquivo.
+# =============================================================================
+
+# --- Deep Learning ---
+torch==2.15.0
+torchvision==0.29.2          # exigido pelas transformações do MiDaS (torch.hub)
+transformers==5.23.0         # Depth Anything V2 (Small e Metric Outdoor)
+timm==1.0.31                 # exigido pelo hubconf do MiDaS (intel-isl/MiDaS:v3_1)
+
+# --- Visão computacional / numérico ---
+opencv-python-headless==5.0.0.93   # headless: sem GUI/Qt; visualização via Matplotlib
+numpy==2.4.6
+pillow==13.0.0
+
+# --- Visualização e organização de resultados ---
+matplotlib==3.11.2
+pandas==3.1.1
+
+# --- Geometria 3D (etapas futuras) ---
+open3d==0.20.0
+
+# --- Configuração ---
+pyyaml==6.0.3
+
+# --- Notebooks (kernel para VS Code / Jupyter) ---
+ipykernel==7.4.0
+
+# --- Testes ---
+pytest==9.2.0

@@ -1,0 +1,101 @@
+# =============================================================================
+# Sidewalk Depth Research — configuração central
+# =============================================================================
+# Todos os caminhos são RELATIVOS À RAIZ DO PROJETO e resolvidos por
+# `src/config.py`, independentemente do diretório de execução
+# (terminal, VS Code, Jupyter ou pytest).
+# =============================================================================
+
+project:
+  name: sidewalk-depth-research
+  version: 0.1.0
+
+paths:
+  images_dir: datasets/images
+  measurements_csv: datasets/measurements.csv
+  # Cache local dos pesos (Hugging Face + torch.hub). Ignorado pelo Git.
+  # Os pesos são baixados apenas na primeira execução e reutilizados depois.
+  models_cache_dir: models/cache
+  depth_maps_dir: outputs/depth_maps
+  comparisons_dir: outputs/comparisons
+  reports_dir: outputs/reports
+
+runtime:
+  # auto -> cuda (se disponível) > mps (Apple Silicon) > cpu
+  device: auto
+  seed: 42
+
+dataset:
+  categories:
+    - regular
+    - potholes
+    - uneven_surfaces
+    - ramps
+    - challenging_conditions
+  image_extensions: [".jpg", ".jpeg", ".png", ".bmp", ".webp"]
+
+preprocessing:
+  # Fotos de celular frequentemente trazem a rotação apenas na tag EXIF.
+  apply_exif_orientation: true
+  # Interpolação da saída bruta (resolução do modelo) para a resolução original.
+  # bicubic = mesmo método do pós-processamento oficial (Transformers/MiDaS).
+  # Pode gerar pequenos overshoots nas bordas; use bilinear para evitá-los.
+  output_interpolation: bicubic
+
+# -----------------------------------------------------------------------------
+# Modelos
+# -----------------------------------------------------------------------------
+# output_type:
+#   relative_inverse_depth -> disparidade relativa (afim-invariante): valores
+#                             MAIORES = MAIS PERTO. Sem unidade física.
+#   metric_depth           -> profundidade em metros (valores MAIORES = MAIS LONGE).
+# Os detalhes de pré-processamento são próprios de cada modelo e NÃO são
+# compartilhados entre eles. Ver models/README.md.
+# -----------------------------------------------------------------------------
+models:
+  depth_anything_v2_small:
+    display_name: Depth Anything V2 Small
+    enabled: true
+    backend: transformers
+    hf_repo_id: depth-anything/Depth-Anything-V2-Small-hf
+    # Commit testado em 2026-11-16 (use "main" para a versão mais recente).
+    revision: 5426e4f0f36572d16453bbda7a8389317b1bef99
+    output_type: relative_inverse_depth
+    units: null
+    license: Apache-2.0
+
+  depth_anything_v2_metric_outdoor_small:
+    display_name: Depth Anything V2 Metric Outdoor Small
+    enabled: true
+    backend: transformers
+    hf_repo_id: depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf
+    # Commit testado em 2026-11-16.
+    revision: fd2c22027eaf20374204f14099b8341e1925ad39
+    output_type: metric_depth
+    units: meters
+    # Valor de config.json do modelo (treinado no Virtual KITTI 2).
+    max_depth_m: 80
+    license: unverified  # não declarada no model card (ver models/README.md)
+
+  midas_v21_small:
+    display_name: MiDaS v2.1 Small
+    enabled: true
+    backend: torch_hub
+    # Tag fixa para reprodutibilidade (evita mudanças no branch master).
+    hub_repo: intel-isl/MiDaS:v3_1
+    hub_model: MiDaS_small
+    hub_transform: small_transform
+    # O MiDaS_small carrega internamente este repositório via torch.hub SEM
+    # trust_repo, o que dispara um prompt interativo (y/N) e trava notebooks.
+    # O carregador deve pré-autorizá-lo. Não é possível fixar a versão (master).
+    hub_dependencies:
+      - rwightman/gen-efficientnet-pytorch
+    output_type: relative_inverse_depth
+    units: null
+    license: MIT
+
+visualization:
+  colormap: inferno
+  # Recorte por percentis aplicado SOMENTE à visualização.
+  percentile_clip: [2.0, 98.0]
+  figure_dpi: 120

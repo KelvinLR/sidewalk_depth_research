@@ -1,0 +1,42 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Ambiente virtual ---
+.venv/
+venv/
+env/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Pesos de modelos (NUNCA versionar) ---
+models/cache/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+
+# --- Resultados gerados (manter apenas a estrutura) ---
+outputs/**/*
+!outputs/**/
+!outputs/**/.gitkeep
+
+# --- Imagens do dataset (podem ser grandes / ter restrições de licença) ---
+# Remova estas linhas se decidir versionar as imagens.
+datasets/images/**/*
+!datasets/images/**/
+!datasets/images/**/.gitkeep
+
+# --- Sistema / IDE ---
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
