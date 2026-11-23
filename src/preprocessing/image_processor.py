@@ -153,11 +153,13 @@ def load_rgb_image(path: str | Path, apply_exif_orientation: bool | None = None)
                 background.paste(rgba, mask=rgba.getchannel("A"))
                 img = background
             rgb = np.asarray(img.convert("RGB"), dtype=np.uint8).copy()
-    except UnidentifiedImageError as exc:
+    except (UnidentifiedImageError, ModuleNotFoundError) as exc:
         hint = " (HEIC/HEIF não é suportado; converta para JPEG/PNG)" if resolved.suffix.lower() in {".heic", ".heif"} else ""
         raise ImageLoadError(f"Formato de imagem não reconhecido: {resolved}{hint}") from exc
     except OSError as exc:
         raise ImageLoadError(f"Falha ao ler {resolved}: {exc}") from exc
+    except Exception as exc:
+        raise ImageLoadError(f"Erro ao processar imagem {resolved}: {exc}") from exc
 
     return LoadedImage(
         path=resolved,

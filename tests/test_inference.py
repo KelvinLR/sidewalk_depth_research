@@ -20,6 +20,7 @@ from src.inference import (
 from src.inference.base_estimator import resize_depth, validate_rgb_image
 from src.inference.depth_anything import DepthAnythingV2Estimator
 from src.inference.midas import MiDaSEstimator
+from src.inference.yolo_depth import YOLODepthEstimator
 from tests.conftest import DummyEstimator
 
 # --- classe-base -------------------------------------------------------------
@@ -104,6 +105,7 @@ def test_available_models() -> None:
         "depth_anything_v2_small",
         "depth_anything_v2_metric_outdoor_small",
         "midas_v21_small",
+        "yolo26n_depth",
     }
 
 
@@ -113,6 +115,7 @@ def test_available_models() -> None:
         ("depth_anything_v2_small", DepthAnythingV2Estimator, DepthOutputType.RELATIVE_INVERSE_DEPTH),
         ("depth_anything_v2_metric_outdoor_small", DepthAnythingV2Estimator, DepthOutputType.METRIC_DEPTH),
         ("midas_v21_small", MiDaSEstimator, DepthOutputType.RELATIVE_INVERSE_DEPTH),
+        ("yolo26n_depth", YOLODepthEstimator, DepthOutputType.METRIC_DEPTH),
     ],
 )
 def test_factory_creates_lazy_estimators(key, cls, output_type) -> None:

@@ -17,11 +17,13 @@ from src.config import get_model_config, load_settings
 from src.inference.base_estimator import BaseDepthEstimator, EstimatorError
 from src.inference.depth_anything import DepthAnythingV2Estimator
 from src.inference.midas import MiDaSEstimator
+from src.inference.yolo_depth import YOLODepthEstimator
 
 #: Mapeia o campo ``backend`` do settings.yaml para a classe que o implementa.
 BACKENDS: dict[str, type[BaseDepthEstimator]] = {
     "transformers": DepthAnythingV2Estimator,
     "torch_hub": MiDaSEstimator,
+    "ultralytics": YOLODepthEstimator,
 }
 
 

@@ -39,6 +39,7 @@ EXPECTED_MODELS = {
     "depth_anything_v2_small": "relative_inverse_depth",
     "depth_anything_v2_metric_outdoor_small": "metric_depth",
     "midas_v21_small": "relative_inverse_depth",
+    "yolo26n_depth": "metric_depth",
 }
 
 
@@ -99,7 +100,7 @@ def test_measurements_csv_accepts_missing_values() -> None:
 def test_model_configs_declare_output_semantics(model_key: str, output_type: str) -> None:
     cfg = get_model_config(model_key)
     assert cfg["output_type"] == output_type
-    assert cfg["backend"] in {"transformers", "torch_hub"}
+    assert cfg["backend"] in {"transformers", "torch_hub", "ultralytics"}
     if output_type == "metric_depth":
         assert cfg["units"] == "meters"
     else:

@@ -94,6 +94,17 @@ models:
     units: null
     license: MIT
 
+  yolo26n_depth:
+    display_name: YOLO26n Depth
+    enabled: true
+    backend: ultralytics
+    weights_path: models/cache/yolo/yolo26n-depth.pt
+    model_name: yolo26n-depth.pt
+    imgsz: 768
+    output_type: metric_depth
+    units: meters
+    license: AGPL-3.0
+
 visualization:
   colormap: inferno
   # Recorte por percentis aplicado SOMENTE à visualização.

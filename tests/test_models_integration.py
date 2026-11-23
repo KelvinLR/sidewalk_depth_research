@@ -31,6 +31,7 @@ def synthetic_image() -> np.ndarray:
         ("depth_anything_v2_small", DepthOutputType.RELATIVE_INVERSE_DEPTH, None),
         ("depth_anything_v2_metric_outdoor_small", DepthOutputType.METRIC_DEPTH, "meters"),
         ("midas_v21_small", DepthOutputType.RELATIVE_INVERSE_DEPTH, None),
+        ("yolo26n_depth", DepthOutputType.METRIC_DEPTH, "meters"),
     ],
 )
 def test_real_model_inference_cpu(key, output_type, units, synthetic_image) -> None:

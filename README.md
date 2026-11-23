@@ -30,6 +30,7 @@ computacional clássica.
 | `depth_anything_v2_small` | Depth Anything V2 Small | Hugging Face Transformers | Disparidade **relativa** (sem unidade; maior = mais perto) |
 | `depth_anything_v2_metric_outdoor_small` | Depth Anything V2 Metric Outdoor Small | Hugging Face Transformers | Profundidade **métrica** (metros; maior = mais longe) |
 | `midas_v21_small` | MiDaS v2.1 Small | `torch.hub` (`intel-isl/MiDaS:v3_1`) | Disparidade **relativa** (sem unidade; maior = mais perto) |
+| `yolo26n_depth` | YOLO26n Depth | Ultralytics (`yolo26n-depth.pt`) | Profundidade **métrica** (metros; maior = mais longe) |
 
 > [!WARNING]
 > **Profundidade relativa não é distância.** Saídas relativas são afim-invariantes

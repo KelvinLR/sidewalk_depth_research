@@ -33,21 +33,21 @@ verificar carregamento, formatos de tensor e tipo de saída.
 > fotografias reais é a Etapa 4. Os valores numéricos abaixo vieram de uma imagem
 > sintética e não têm significado físico.
 
-| | Depth Anything V2 Small | Depth Anything V2 Metric Outdoor Small | MiDaS v2.1 Small |
-|---|---|---|---|
-| Origem | Hugging Face `depth-anything/Depth-Anything-V2-Small-hf` | Hugging Face `depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf` | `torch.hub` `intel-isl/MiDaS:v3_1` → `MiDaS_small` |
-| Revisão testada | `5426e4f0f365…` | `fd2c22027eaf…` | tag `v3_1` + checkpoint `v2_1/midas_v21_small_256.pt` |
-| Carregamento | `AutoImageProcessor` + `AutoModelForDepthEstimation` | idem | `torch.hub.load(...)` + `transforms.small_transform` |
-| Arquitetura | DINOv2 ViT-S/14 + cabeça DPT (~25M params) | idem, cabeça métrica | EfficientNet-Lite3 + decoder MiDaS |
-| Pré-processamento | `DPTImageProcessor`: lado menor → 518, mantém proporção, múltiplo de 14, bicúbico, normalização ImageNet | idêntico ao Small | Entrada `HxWx3` RGB `uint8` → `/255`, lado maior → 256, mantém proporção, múltiplo de 32, bicúbico (OpenCV), normalização ImageNet |
-| Entrada 640×480 → tensor | `(1, 3, 518, 686)` | `(1, 3, 518, 686)` | `(1, 3, 192, 256)` |
-| Saída bruta | `(1, 518, 686)` | `(1, 518, 686)` | `(1, 192, 256)` |
-| Volta à resolução original | `processor.post_process_depth_estimation(..., target_sizes=[(H, W)])` | idem | interpolação manual (`torch.nn.functional.interpolate`, bicúbica) |
-| `config.depth_estimation_type` | `relative` | `metric` (`max_depth = 80`) | — |
-| **Natureza da saída** | **Disparidade relativa** (inverso de profundidade, afim-invariante). Maior = mais perto. Sem unidade. | **Profundidade métrica em metros**. Maior = mais longe. | **Disparidade relativa** (inverso de profundidade, afim-invariante). Maior = mais perto. Sem unidade. Escala numérica arbitrária (centenas). |
-| Download | ~99 MB (safetensors) | ~99 MB (safetensors) | 96 MB (MiDaS) + 32 MB (EfficientNet-Lite3 ImageNet, baixado pelo construtor e depois sobrescrito) |
-| Tempo 1ª inferência (CPU, M1, sintética) | ~0,9 s | ~0,7 s | ~0,4 s |
-| Licença | Apache-2.0 | **Não declarada no model card** (o repositório oficial aplica Apache-2.0 às variantes Small; confirmar antes de uso comercial) | MIT |
+| | Depth Anything V2 Small | Depth Anything V2 Metric Outdoor Small | MiDaS v2.1 Small | YOLO26n Depth |
+|---|---|---|---|---|
+| Origem | Hugging Face `depth-anything/Depth-Anything-V2-Small-hf` | Hugging Face `depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf` | `torch.hub` `intel-isl/MiDaS:v3_1` → `MiDaS_small` | Ultralytics (`yolo26n-depth.pt`) |
+| Revisão testada | `5426e4f0f365…` | `fd2c22027eaf…` | tag `v3_1` + checkpoint `v2_1/midas_v21_small_256.pt` | Ultralytics v8.4.216 |
+| Carregamento | `AutoImageProcessor` + `AutoModelForDepthEstimation` | idem | `torch.hub.load(...)` + `transforms.small_transform` | `ultralytics.YOLO("yolo26n-depth.pt")` |
+| Arquitetura | DINOv2 ViT-S/14 + cabeça DPT (~25M params) | idem, cabeça métrica | EfficientNet-Lite3 + decoder MiDaS | YOLO26 Nano Depth Head |
+| Pré-processamento | `DPTImageProcessor`: lado menor → 518, mantém proporção, múltiplo de 14, bicúbico, normalização ImageNet | idêntico ao Small | Entrada `HxWx3` RGB `uint8` → `/255`, lado maior → 256, mantém proporção, múltiplo de 32, bicúbico (OpenCV), normalização ImageNet | Letterbox para 768x768, escala para [0, 1] |
+| Entrada 640×480 → tensor | `(1, 3, 518, 686)` | `(1, 3, 518, 686)` | `(1, 3, 192, 256)` | `(1, 3, 768, 768)` |
+| Saída bruta | `(1, 518, 686)` | `(1, 518, 686)` | `(1, 192, 256)` | `(1, 192, 192)` |
+| Volta à resolução original | `processor.post_process_depth_estimation(..., target_sizes=[(H, W)])` | idem | interpolação manual (`torch.nn.functional.interpolate`, bicúbica) | unpadding e interpolação bilinear oficial do Ultralytics |
+| `config.depth_estimation_type` | `relative` | `metric` (`max_depth = 80`) | — | `metric` |
+| **Natureza da saída** | **Disparidade relativa** (inverso de profundidade, afim-invariante). Maior = mais perto. Sem unidade. | **Profundidade métrica em metros**. Maior = mais longe. | **Disparidade relativa** (inverso de profundidade, afim-invariante). Maior = mais perto. Sem unidade. Escala numérica arbitrária (centenas). | **Profundidade métrica em metros**. Maior = mais longe. |
+| Download | ~99 MB (safetensors) | ~99 MB (safetensors) | 96 MB (MiDaS) + 32 MB (EfficientNet-Lite3 ImageNet) | ~12 MB (`yolo26n-depth.pt`) |
+| Tempo inferência (CPU, M1) | ~0,5 s | ~0,6 s | ~0,25 s | ~0,18 s |
+| Licença | Apache-2.0 | **Não declarada no model card** | MIT | AGPL-3.0 |
 
 ### Observações importantes
 

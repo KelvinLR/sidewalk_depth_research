@@ -15,6 +15,7 @@ torch==2.15.0
 torchvision==0.29.2          # exigido pelas transformações do MiDaS (torch.hub)
 transformers==5.23.0         # Depth Anything V2 (Small e Metric Outdoor)
 timm==1.0.31                 # exigido pelo hubconf do MiDaS (intel-isl/MiDaS:v3_1)
+ultralytics==8.4.216         # YOLO Depth (yolo26-depth)
 
 # --- Visão computacional / numérico ---
 opencv-python-headless==5.0.0.93   # headless: sem GUI/Qt; visualização via Matplotlib
